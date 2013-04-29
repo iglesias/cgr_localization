@@ -11,3 +11,17 @@
 *.lai
 *.la
 *.a
+
+# Files from the original mercurial repository
+.hg/*
+.hgignore
+
+# Auto-generated file created when a new map is rendered
+pre_render_stats.txt
+
+# Binaries
+bin/*
+build/*
+
+# Doxygen documentation
+doc/*
