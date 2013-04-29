@@ -1,0 +1,22 @@
+<package>
+  <description brief="cgr_localization">
+
+     CGR Localization
+
+  </description>
+  <author>Joydeep Biswas</author>
+  <license>LGPLv3.0</license>
+  <review status="unreviewed" notes=""/>
+  <url></url>
+  <depend package="std_msgs"/>
+  <depend package="nav_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="rosbag"/>
+  <depend package="visualization_msgs"/>
+  <depend package="tf"/>
+
+</package>
+
+

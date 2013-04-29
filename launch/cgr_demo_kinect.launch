@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <param name="/use_sim_time" value="true"/>
+
+  <node pkg="cgr_localization" type="localization_gui" name="localization_gui" output="screen" required="true" />
+  
+  <node pkg="cgr_localization" type="cgr_localization" name="cgr_localization" output="screen" args="-d0 -pl" />
+  
+</launch>
