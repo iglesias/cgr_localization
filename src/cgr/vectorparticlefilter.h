@@ -256,7 +256,7 @@ public:
   Particle2D createParticle(VectorMap* map, vector2f loc, float angle, float locationUncertainty, float angleUncertainty);
   /// Write to file run statistics about particle distribution
   void saveRunLog(FILE* f);
-  /// Write to file riun-time profiling information
+  /// Write to file run-time profiling information
   void saveProfilingStats(FILE* f);
   /// Compile lists of drawing primitives that can be visualized for debugging purposes
   void drawDisplay(vector<float> &lines_p1x, vector<float> &lines_p1y, vector<float> &lines_p2x, vector<float> &lines_p2y, vector<uint32_t> &lines_color,
