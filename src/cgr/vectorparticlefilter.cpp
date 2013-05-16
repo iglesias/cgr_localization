@@ -88,26 +88,8 @@ Particle2D VectorLocalization2D::createParticle(VectorMap* map, vector2f loc, fl
 
 void VectorLocalization2D::setLocation(vector2f loc, float angle, const char* map, float locationUncertainty, float angleUncertainty)
 {
-  for(unsigned int i=0; i<particles.size(); i++){
-    particles[i].loc = vector2f(randn(locationUncertainty, loc.x), randn(locationUncertainty, loc.y));
-    particles[i].angle = randn(angleUncertainty, angle);
-  }
-
-  bool found = false;
-  int mapIndex=0;
-  for(unsigned int i=0; !found && i<maps.size(); i++){
-    if(maps[i].mapName.compare(map)==0){
-      mapIndex = i;
-      found = true;
-    }
-  }
-  if(found){
-    currentMap = &maps[mapIndex];
-  }else{
-    char buf[4096];
-    snprintf(buf, 4095, "Unknown map: \"%s\"",map);
-    TerminalWarning(buf);
-  }  
+  setLocation(loc, angle, locationUncertainty, angleUncertainty);
+  setMap(map);
 }
 
 void VectorLocalization2D::setLocation(vector2f loc, float angle, float locationUncertainty, float angleUncertainty)
