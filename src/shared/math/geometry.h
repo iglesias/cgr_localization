@@ -93,8 +93,8 @@ inline vector3s vec3s(const vec_in &p)
 
 //==== Angle conversion, and normally missing constant(s) ====//
 
-#define RAD(deg) ((deg) * (M_PI / 180.0)) /* convert radians to degrees */
-#define DEG(rad) ((rad) * (180.0 / M_PI)) /* convert degrees to radians */
+#define RAD(deg) ((deg) * (M_PI / 180.0)) /* convert degrees to radians */
+#define DEG(rad) ((rad) * (180.0 / M_PI)) /* convert radians to degrees */
 
 #ifndef HUGE_VALF
 #define HUGE_VALF (1E37)
