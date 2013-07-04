@@ -191,7 +191,7 @@ void publishLocation(bool limitRate)
   //Publish map to base_footprint tf
   try{
     tf::StampedTransform odomToBaseTf;
-    transformListener->lookupTransform("odom","base_footprint",ros::Time(0), odomToBaseTf);
+    transformListener->lookupTransform("odom","base_link",ros::Time(0), odomToBaseTf);
     
     vector2f map_base_trans = curLoc;
     float map_base_rot = curAngle;
@@ -418,7 +418,7 @@ void InitModels(){
   lidarParams.laserScan = (float*) malloc(lidarParams.numRays*sizeof(float));
   
   filteredPointCloudMsg.header.seq = 0;
-  filteredPointCloudMsg.header.frame_id = "base_footprint"; 
+  filteredPointCloudMsg.header.frame_id = "base_link";
   filteredPointCloudMsg.channels.clear();
   
   return;
@@ -473,7 +473,7 @@ void lidarCallback(const sensor_msgs::LaserScan &msg)
   
   tf::StampedTransform baseLinkToLaser;
   try{
-    transformListener->lookupTransform("base_footprint", msg.header.frame_id, ros::Time(0), baseLinkToLaser);
+    transformListener->lookupTransform("base_link", msg.header.frame_id, ros::Time(0), baseLinkToLaser);
   }
   catch(tf::TransformException ex){
     ROS_ERROR("%s",ex.what());
@@ -663,6 +663,7 @@ int main(int argc, char** argv)
   ResetTerminal();
   
   if(debugLevel>=0){
+    printf("DebugLevel       : %d\n",debugLevel);
     printf("NumParticles     : %d\n",numParticles);
     printf("Alpha1           : %f\n",motionParams.Alpha1);
     printf("Alpha2           : %f\n",motionParams.Alpha2);
