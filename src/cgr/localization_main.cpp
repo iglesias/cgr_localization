@@ -420,7 +420,7 @@ void InitModels(){
   filteredPointCloudMsg.header.seq = 0;
   filteredPointCloudMsg.header.frame_id = "base_link";
   filteredPointCloudMsg.channels.clear();
-  
+
   return;
 }
 
@@ -531,14 +531,21 @@ void depthCallback(const sensor_msgs::Image &msg)
   }
   const uint8_t* ptrSrc = msg.data.data();
   uint16_t depth[640*480];
-  memcpy(depth, ptrSrc, 640*480*(sizeof(uint16_t)));
-  
+  float fdepth[640*480];
+//  memcpy(depth, ptrSrc, 640*480*(sizeof(uint16_t)));
+  memcpy(fdepth, ptrSrc, 640*480*(sizeof(float)));
+
+  for(int i=0; i<640*480; i++){
+    depth[i] = (uint16_t) (65535*((fdepth[i]-0.5)/(5.5-0.5)));
+  }
+
   if(!usePointCloud)
     return;
   
   tf::StampedTransform baseLinkToKinect;
   try{
-    transformListener->lookupTransform("base_footprint", msg.header.frame_id, ros::Time(0), baseLinkToKinect);
+//    transformListener->lookupTransform("base_footprint", msg.header.frame_id, ros::Time(0), baseLinkToKinect);
+    transformListener->lookupTransform("camera_link", msg.header.frame_id, ros::Time(0), baseLinkToKinect);
   }
   catch(tf::TransformException ex){
     ROS_ERROR("%s",ex.what());
@@ -570,8 +577,11 @@ void depthCallback(const sensor_msgs::Image &msg)
   vector<vector3f> outlierCloud;
   vector<vector2i> pixelLocs;
   vector<PlanePolygon> planePolygons;
-  
+
   planeFilter.GenerateFilteredPointCloud(depth, filteredPointCloud, pixelLocs, pointCloudNormals, outlierCloud, planePolygons);
+  if(debugLevel>0){
+    printf("\t\tfilteredPointCloud.size()=%d\n", filteredPointCloud.size());
+  }
   
   //Transform from kinect coordinates to robot coordinates
   
@@ -699,7 +709,8 @@ int main(int argc, char** argv)
   //Initialize ros for sensor and odometry topics
   ros::Subscriber odometrySubscriber = n.subscribe("odom", 20, odometryCallback);
   ros::Subscriber lidarSubscriber = n.subscribe("scan", 5, lidarCallback);
-  ros::Subscriber kinectSubscriber = n.subscribe("kinect_depth", 1, depthCallback);
+//  ros::Subscriber kinectSubscriber = n.subscribe("kinect_depth", 1, depthCallback);
+  ros::Subscriber kinectSubscriber = n.subscribe("camera/depth/image", 1, depthCallback);
   ros::Subscriber initialPoseSubscriber = n.subscribe("initialpose",1,initialPoseCallback);
   transformListener = new tf::TransformListener(ros::Duration(10.0));
   transformBroadcaster = new tf::TransformBroadcaster();  
