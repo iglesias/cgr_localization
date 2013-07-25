@@ -66,12 +66,14 @@ using namespace cgr_localization;
 Publisher guiPublisher;
 Publisher localizationPublisher;
 Publisher filteredPointCloudPublisher;
+Publisher completePointCloudPublisher;
 ServiceServer localizationServer;
 Publisher particlesPublisher;
 tf::TransformBroadcaster *transformBroadcaster;
 tf::TransformListener *transformListener;
 DisplayMsg guiMsg;
 sensor_msgs::PointCloud filteredPointCloudMsg; /// FSPF point cloud
+sensor_msgs::PointCloud completePointCloudMsg; /// obtained from the depth image, for debugging
 
 VectorLocalization2D::PointCloudParams pointCloudParams;
 VectorLocalization2D::LidarParams lidarParams;
@@ -421,6 +423,10 @@ void InitModels(){
   filteredPointCloudMsg.header.frame_id = "base_link";
   filteredPointCloudMsg.channels.clear();
 
+  completePointCloudMsg.header.seq = 0;
+  completePointCloudMsg.header.frame_id = "base_link";
+  completePointCloudMsg.channels.clear();
+
   return;
 }
 
@@ -567,14 +573,18 @@ void depthCallback(const sensor_msgs::Image &msg)
   
   //Generate filtered point cloud  
   vector<vector3f> filteredPointCloud;
+  vector<vector3f> completePointCloud;
   vector<vector3f> pointCloudNormals;
   vector<vector3f> outlierCloud;
   vector<vector2i> pixelLocs;
+  vector<int> completePixelLocs;
   vector<PlanePolygon> planePolygons;
 
   planeFilter.GenerateFilteredPointCloud(depth, filteredPointCloud, pixelLocs, pointCloudNormals, outlierCloud, planePolygons);
+  planeFilter.GenerateCompletePointCloud(depth, completePointCloud, completePixelLocs);
   if(debugLevel>0){
     printf("\t\tfilteredPointCloud.size()=%lu\n", filteredPointCloud.size());
+    printf("\t\tcompletePointCloud.size()=%lu\n", completePointCloud.size());
   }
   
   //Transform from kinect coordinates to robot coordinates
@@ -582,8 +592,23 @@ void depthCallback(const sensor_msgs::Image &msg)
   for(unsigned int i=0; i<filteredPointCloud.size(); i++){
     filteredPointCloud[i] = filteredPointCloud[i].transform(kinectToRobotTransform);
     pointCloudNormals[i] = pointCloudNormals[i].transform(kinectToRobotTransform);
+    completePointCloud[i] = completePointCloud[i].transform(kinectToRobotTransform);
   }
-  
+
+  if(debugLevel>0){
+    completePointCloudMsg.points.clear();
+    completePointCloudMsg.header.stamp = ros::Time::now();
+    
+    vector<geometry_msgs::Point32>* points = &(completePointCloudMsg.points);
+    geometry_msgs::Point32 p;
+    for(int i=0; i<(int)completePointCloud.size(); i++){
+      p.x = completePointCloud[i].x;
+      p.y = completePointCloud[i].y;
+      p.z = completePointCloud[i].z;
+      points->push_back(p);
+    }
+    completePointCloudPublisher.publish(completePointCloudMsg);
+  }
 
   if(debugLevel>0){
     filteredPointCloudMsg.points.clear();
@@ -703,13 +728,14 @@ int main(int argc, char** argv)
   //Initialize ros for sensor and odometry topics
   ros::Subscriber odometrySubscriber = n.subscribe("odom", 20, odometryCallback);
   ros::Subscriber lidarSubscriber = n.subscribe("scan", 5, lidarCallback);
-//  ros::Subscriber kinectSubscriber = n.subscribe("kinect_depth", 1, depthCallback);
-  ros::Subscriber kinectSubscriber = n.subscribe("/camera/depth_registered/image_raw", 1, depthCallback);
+  ros::Subscriber kinectSubscriber = n.subscribe("kinect_depth", 1, depthCallback);
+//  ros::Subscriber kinectSubscriber = n.subscribe("/camera/depth_registered/image_raw", 1, depthCallback);
   ros::Subscriber initialPoseSubscriber = n.subscribe("initialpose",1,initialPoseCallback);
   transformListener = new tf::TransformListener(ros::Duration(10.0));
   transformBroadcaster = new tf::TransformBroadcaster();  
   
   filteredPointCloudPublisher = n.advertise<sensor_msgs::PointCloud>("Cobot/Kinect/FilteredPointCloud", 1);
+  completePointCloudPublisher = n.advertise<sensor_msgs::PointCloud>("Cobot/Kinect/CompletePointCloud", 1);
   
   while(ros::ok() && run){
     ros::spinOnce();
