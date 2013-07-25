@@ -4,6 +4,6 @@
 
   <param name="/use_sim_time" value="true"/>
 
-  <node pkg="cgr_localization" type="cgr_localization" name="cgr_localization" output="screen" args="-d0 -pl" />
+  <node pkg="cgr_localization" type="cgr_localization" name="cgr_localization" output="screen" args="-d1 -l -p" />
   
 </launch>
