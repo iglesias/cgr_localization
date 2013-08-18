@@ -22,6 +22,9 @@ class Pose:
 		self.y.pop(index)
 		self.angle.pop(index)
 
+	def adjustTimeStamp(self,refTimeStamp):
+		self.timeStamp[:] = [timeStamp - refTimeStamp for timeStamp in self.timeStamp]
+
 PKG = 'cgr_localization' # this package name
 import roslib; roslib.load_manifest(PKG)
 
@@ -58,6 +61,9 @@ def localization_listener():
   # plot pose over time
   display_data()
 
+  # serialize and save data into disk
+  dump_data()
+
 def display_data():
   import matplotlib.pyplot as plt
 
@@ -67,6 +73,10 @@ def display_data():
   LIDAR.pop(0)
   DEPTH.pop(0)
   DEPTH.pop(0)
+
+  refTimeStamp = min(LIDAR.timeStamp[0],DEPTH.timeStamp[0])
+  LIDAR.adjustTimeStamp(refTimeStamp)
+  DEPTH.adjustTimeStamp(refTimeStamp)
 
   print('len(LIDAR)=%d' % len(LIDAR.x))
   print('len(DEPTH)=%d' % len(DEPTH.x))
@@ -86,6 +96,12 @@ def display_data():
   axarr[1,1].plot(DEPTH.x,DEPTH.y)
 
   plt.show()
+
+def dump_data():
+	import pickle
+
+	pose = [LIDAR,DEPTH]
+	pickle.dump(pose, open('pose.p','wb'))
 
 if __name__ == '__main__':
   localization_listener()
