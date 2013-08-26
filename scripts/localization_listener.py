@@ -44,7 +44,7 @@ def depthCallback(data):
   DEPTH.append(data.timeStamp,data.x,data.y,data.angle)
   rospy.sleep(0.1)
 
-def localization_listener():
+def localization_listener(dump_fname='pose'):
 
   # anonymous=True flag means that rospy chooses a unique
   # name for the 'localization_listener' node so that multiple
@@ -52,23 +52,14 @@ def localization_listener():
   rospy.init_node('localization_listener', anonymous=True)
 
   # subscribe to the localization topic to receive LocalizationMsg
-  rospy.Subscriber('localization_laser', LocalizationMsg, lidarCallback, queue_size=1)
-  rospy.Subscriber('localization_kinect', LocalizationMsg, depthCallback, queue_size=1)
+  rospy.Subscriber('localization_lidar', LocalizationMsg, lidarCallback, queue_size=1)
+  rospy.Subscriber('localization_depth', LocalizationMsg, depthCallback, queue_size=1)
 
   # prevent python from exiting until the node is stopped
   rospy.spin()
 
-  # plot pose over time
-  display_data()
-
-  # serialize and save data into disk
-  dump_data()
-
-def display_data():
-  import matplotlib.pyplot as plt
-
-  # remove the first elements of the lists because it contains the default localization
-  # set when no data has been yet received
+  # remove the first elements of the lists because they contain the default
+  # localization, set when no data has been yet received
   LIDAR.pop(0)
   LIDAR.pop(0)
   DEPTH.pop(0)
@@ -78,8 +69,14 @@ def display_data():
   LIDAR.adjustTimeStamp(refTimeStamp)
   DEPTH.adjustTimeStamp(refTimeStamp)
 
-  print('len(LIDAR)=%d' % len(LIDAR.x))
-  print('len(DEPTH)=%d' % len(DEPTH.x))
+  # plot pose over time
+#   display_data()
+
+  # serialize and save data into disk
+  dump_data(fname=dump_fname)
+
+def display_data():
+  import matplotlib.pyplot as plt
 
   fig, axarr = plt.subplots(2,2)
 
@@ -97,12 +94,20 @@ def display_data():
 
   plt.show()
 
-def dump_data():
+def dump_data(fname):
 	import pickle
 
 	pose = [LIDAR,DEPTH]
-	pickle.dump(pose, open('pose.p','wb'))
+	pickle.dump(pose, open('posefiles/%s.p' % fname,'wb'))
+
+	print 'data dumped to posefiles/%s.p!' % fname
 
 if __name__ == '__main__':
-  localization_listener()
+  import sys
+
+  if len(sys.argv)==3:
+    # call from cgr_benchmark looks like: ./localization_listener __name:=localization_listener posefilename
+    localization_listener(sys.argv[2])
+  else:
+    localization_listener()
 
