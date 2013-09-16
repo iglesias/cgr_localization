@@ -255,6 +255,7 @@ float VectorLocalization2D::observationWeightPointCloud(vector2f loc, float angl
       logTotalWeight += logOutOfRangeProb*corelationFactor;
     }
   }
+
   //return numCorrespondences;
   return exp(logTotalWeight);
 }
@@ -470,7 +471,7 @@ void VectorLocalization2D::updatePointCloud(vector< vector2f >& pointCloud, vect
   static const bool usePermissibility = true;
   
   double tStart = GetTimeSec();
-  
+
   //Compute the sampling density
   float sqDensityKernelSize = sq(pointCloudParams.kernelSize);
   float totalDensity = 0.0;
@@ -633,7 +634,7 @@ void VectorLocalization2D::getPointCloudGradient(vector2f loc, float angle, vect
       
       //Attraction only for valid correspondences
       if(cosAngle > pointCloudParams.minCosAngleError){
-        attraction = attractorFunction(lines[lineCorrespondences[i]], curPoint,pointCloudParams.attractorRange, pointCloudParams.correspondenceMargin);
+        attraction = attractorFunction(lines[lineCorrespondences[i]], curPoint, pointCloudParams.attractorRange, pointCloudParams.correspondenceMargin);
         //Add the point and attraction (only if non-zero)
         //logWeight += -min(attraction.squaredNorm()/pointCloudParams.stdDev, -pointCloudParams.logShortHitProb)*pointCloudParams.corelationFactor;
         
@@ -959,20 +960,15 @@ void VectorLocalization2D::refinePointCloud(const vector<vector2f> &pointCloud, 
   pointCloudEval.stageRWeights = 0.0;
   pointCloudEval.lastRunTime = GetTimeSec();
   
-  /*
-  vector< vector2f > reducedPointCloud, reducedPointNormals;
-  reducePointCloud(pointCloud, pointNormals, reducedPointCloud, reducedPointNormals);
-  */
-  
   particlesRefined = particles;
   if(pointCloudParams.numSteps>0){
     for(int i=0; i<numParticles; i++){
-      //refineLocationPointCloud(particlesRefined[i].loc, particlesRefined[i].angle, stage0Weights[i], stageRWeights[i],reducedPointCloud, reducedPointNormals, pointCloudParams);
-      refineLocationPointCloud(particlesRefined[i].loc, particlesRefined[i].angle, stage0Weights[i], stageRWeights[i],pointCloud, pointNormals, pointCloudParams);
+      refineLocationPointCloud(particlesRefined[i].loc, particlesRefined[i].angle, stage0Weights[i], stageRWeights[i], pointCloud, pointNormals, pointCloudParams);
       pointCloudEval.stage0Weights += stage0Weights[i];
       pointCloudEval.stageRWeights += stageRWeights[i];
     }
   }
+
   refineTime = GetTimeSec() - tStart;
   pointCloudEval.runTime = refineTime;
 }
