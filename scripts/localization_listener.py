@@ -105,9 +105,9 @@ def dump_data(fname):
 if __name__ == '__main__':
   import sys
 
-  if len(sys.argv)==3:
-    # call from cgr_benchmark looks like: ./localization_listener __name:=localization_listener posefilename
-    localization_listener(sys.argv[2])
+  if len(sys.argv)==2:
+    # call from cgr_benchmark looks like: ./localization_listener posefilename
+    localization_listener(sys.argv[1])
   else:
     localization_listener()
 
