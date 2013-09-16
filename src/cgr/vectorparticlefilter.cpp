@@ -81,7 +81,7 @@ void VectorLocalization2D::loadAtlas()
   if(debug) printf("Done Loading Atlas.\n");
 }
 
-Particle2D VectorLocalization2D::createParticle(VectorMap* map, vector2f loc, float angle, float locationUncertainty, float angleUncertainty)
+Particle2D VectorLocalization2D::createParticle(vector2f loc, float angle, float locationUncertainty, float angleUncertainty)
 {
   return Particle2D(randn(locationUncertainty,loc.x), randn(locationUncertainty,loc.y), randn(angleUncertainty,angle),1.0);
 }
@@ -151,7 +151,7 @@ void VectorLocalization2D::initialize(int _numParticles, const char* mapName, ve
       printf(" Initializing particles: %5.1f%%\r",float(i)/float(numParticles)*100.0);
       fflush(stdout);
     }
-    particles[i] = createParticle(currentMap, loc, angle, locationUncertainty, angleUncertainty);
+    particles[i] = createParticle(loc, angle, locationUncertainty, angleUncertainty);
   }
   
   computeLocation(loc, angle);

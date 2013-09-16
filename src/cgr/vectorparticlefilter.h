@@ -253,7 +253,7 @@ public:
   /// Returns the current map name
   const char* getCurrentMapName(){return currentMap->mapName.c_str();}
   /// Creates a particle with the specified properties
-  Particle2D createParticle(VectorMap* map, vector2f loc, float angle, float locationUncertainty, float angleUncertainty);
+  Particle2D createParticle(vector2f loc, float angle, float locationUncertainty, float angleUncertainty);
   /// Write to file run statistics about particle distribution
   void saveRunLog(FILE* f);
   /// Write to file run-time profiling information
