@@ -63,7 +63,7 @@ char* map_name;
 
 void callback(vector2d loc,vector2d loc2,double orientation,int type)
 {
-  static const bool debug = false;
+  static const bool debug = true;
   static FILE* fid=NULL;
   if(saveLocs && fid==NULL)
     fid = fopen("savedLocs.txt","aw");
@@ -334,7 +334,7 @@ protected:
 
 int main(int argc, char *argv[])
 {
-  static const bool debug = false;
+  static const bool debug = true;
   ColourTerminal(TerminalUtils::TERMINAL_COL_GREEN,TerminalUtils::TERMINAL_COL_BLACK,TerminalUtils::TERMINAL_ATTR_BRIGHT);
   printf("\nVector LIDAR Localization GUI\n\n");
   ResetTerminal();
@@ -361,8 +361,19 @@ int main(int argc, char *argv[])
   int c;
   while((c = popt.getNextOpt()) >= 0){
   }
+
   if(saveOrientations)
     saveLocs = true;
+
+  if(debug){
+    printf("test-mode:          %d\n",testMode?1:0);
+    printf("map-name:           %s\n",map_name);
+    printf("save-locs:          %d\n",saveLocs?1:0);
+    printf("live-view:          %d\n",liveView?1:0);
+    printf("persistent-display: %d\n",persistentDisplay?1:0);
+    printf("save-orientation:   %d\n",saveOrientations?1:0);
+    printf("\n");
+  }
   
   app = new QApplication(argc, argv);
   display = new VectorDisplay();
