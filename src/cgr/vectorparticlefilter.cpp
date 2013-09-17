@@ -995,7 +995,6 @@ void VectorLocalization2D::lowVarianceResample()
       vector2f deltaLoc = vector2f(frand(-1.0,1.0),frand(-1.0,1.0))*0.05;
       float deltaAngle = frand(-1.0,1.0)*RAD(5.0);
       newParticles[i].loc += deltaLoc;
-      newParticles[i].lastLoc += deltaLoc;
       newParticles[i].angle += deltaAngle;
     }
     x += weightIncrement;
