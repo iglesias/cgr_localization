@@ -73,11 +73,11 @@ public:
   int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector<int>& visibilityList) const;
 
   /// Get lines (for each ray) which intersect first the rays starting at angles a0 to a1, at increments of da
-  vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const std::vector< vector2f > pointCloud, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0);
+  vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const std::vector< vector2f >& pointCloud, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0) const;
   /// Convenience function: same as previous, but specified by center angle, angle increment (da), and numRays to scan
-  vector<int> getRayToLineCorrespondences(vector2f loc, float a0, float a1, float da, float minRange, float maxRange);
+  vector<int> getRayToLineCorrespondences(vector2f loc, float a0, float a1, float da, float minRange, float maxRange) const;
   /// Return intersecting map lines for each ray generated from the provided point cloud (which is assumed to be in local frame)
-  vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0);
+  vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0) const;
 
   /// Get ray cast from vector map at given location and angle, as specified by center angle, angle increment (da), and numRays to scan
   vector<float> getRayCast(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange);

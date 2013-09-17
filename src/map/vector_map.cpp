@@ -240,7 +240,7 @@ int VectorMap::getLineCorrespondence(vector2f loc, float angle, float minRange, 
   return bestLine;
 }
 
-vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const vector<vector2f> pointCloud, float minRange, float maxRange, bool analytical, vector<line2f> *lines)
+vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const vector<vector2f>& pointCloud, float minRange, float maxRange, bool analytical, vector<line2f> *lines) const
 {
   //FunctionTimer ft(__FUNCTION__);
   static const bool UsePreRender = true;
@@ -280,7 +280,7 @@ vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, fl
   return correspondences;
 }
 
-vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float a0, float a1, float da, float minRange, float maxRange)
+vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float a0, float a1, float da, float minRange, float maxRange) const
 {
   //FunctionTimer ft(__PRETTY_FUNCTION__);
   vector<int> correspondences;
@@ -350,7 +350,7 @@ vector< VectorMap::LineSegment > VectorMap::sortLineSegments(const vector2f& loc
   return segments;
 }
 
-vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange, bool analytical, vector< line2f > *lines)
+vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange, bool analytical, vector< line2f > *lines) const
 {
   //FunctionTimer ft("getRayToLineCorrespondences");
   float intervals = numRays - 1.0;
