@@ -97,7 +97,7 @@ public:
   const vector<int>* getVisibilityList(vector2f loc) const { return getVisibilityList(loc.x, loc.y); }
 
   /// Perform an analytical scene render. i.e. Generate a list of lines visible from loc, and the start and end angles subtended by them
-  vector<line2f> sceneRender(vector2f loc, float a0=0.0, float a1=M_2PI);
+  vector<line2f> sceneRender(vector2f loc, float a0=0.0, float a1=M_2PI) const;
 };
 
 #endif //VECTOR_MAP_H

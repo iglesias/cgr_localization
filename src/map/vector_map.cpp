@@ -663,7 +663,7 @@ void VectorMap::trimOcclusion(const vector2f& loc, const line2f& line1, line2f& 
   }
 }
 
-vector<line2f> VectorMap::sceneRender(vector2f loc, float a0, float a1)
+vector<line2f> VectorMap::sceneRender(vector2f loc, float a0, float a1) const
 {
   //FunctionTimer ft("Scene Render");
   static const float eps = 0.001;
