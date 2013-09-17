@@ -180,7 +180,7 @@ protected:
   vector<Vector2f> points2;
   vector<line2f> debugLines;
   vector<int> lineCorrespondences;
-  vector2f locCorrectionP0, locCorrectionP1;
+  vector<vector2f> locCorrectionP0, locCorrectionP1;
   
   //Statistics of performance
   int numUnrefinedParticlesSampled;

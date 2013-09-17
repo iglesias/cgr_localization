@@ -46,8 +46,6 @@ VectorLocalization2D::VectorLocalization2D(const char* _mapsFolder)
   loadAtlas();
   numParticles = 0;
   particles.clear();
-  locCorrectionP0.zero();
-  locCorrectionP1.zero();
 }
 
 VectorLocalization2D::VectorLocalization2D(int _numParticles)
@@ -866,7 +864,7 @@ void VectorLocalization2D::refineLocationPointCloud(vector2f& loc, float& angle,
   vector2f locPrev = loc;
   float anglePrev = angle;
   float weight;
-  locCorrectionP0 = loc;
+  locCorrectionP0.push_back(loc);
   for(int i=0; beingRefined && i<pointCloudParams.numSteps; i++){
     getPointCloudGradient(loc,angle,locGrad,angleGrad,pointCloud,pointNormals,weight, pointCloudParams, lineCorrespondences, lines);
     if(i==0) initialWeight = exp(weight);
@@ -874,7 +872,7 @@ void VectorLocalization2D::refineLocationPointCloud(vector2f& loc, float& angle,
     angle -= pointCloudParams.etaAngle*angleGrad;
     beingRefined = fabs(angleGrad)>pointCloudParams.minRefineFraction*pointCloudParams.maxAngleGradient && locGrad.sqlength()>sq(pointCloudParams.minRefineFraction*pointCloudParams.maxLocGradient);
   }
-  locCorrectionP1 = loc;
+  locCorrectionP1.push_back(loc);
   finalWeight = exp(weight);
   if(debug) printf("gradient: %7.3f,%7.3f %6.1f\u00b0\n",V2COMP(loc-locPrev),DEG(angle-anglePrev));
 }
@@ -1172,12 +1170,17 @@ void VectorLocalization2D::drawDisplay(vector<float> &lines_p1x, vector<float> &
   debugLines.clear();
   
   if(drawCorrections){
-    vector2f p2 = locCorrectionP1 + 20.0*(locCorrectionP1 - locCorrectionP0);
-    lines_p1x.push_back(scale*locCorrectionP0.x);
-    lines_p1y.push_back(scale*locCorrectionP0.y);
-    lines_p2x.push_back(scale*p2.x);
-    lines_p2y.push_back(scale*p2.y);
-    lines_color.push_back(0x1BE042);
+    assert(locCorrectionP0.size() == locCorrectionP1.size());
+    for(int i=0; i<int(locCorrectionP0.size()); i++){
+      vector2f p2 = locCorrectionP1[i] + 20.0*(locCorrectionP1[i] - locCorrectionP0[i]);
+      lines_p1x.push_back(scale*locCorrectionP0[i].x);
+      lines_p1y.push_back(scale*locCorrectionP0[i].y);
+      lines_p2x.push_back(scale*p2.x);
+      lines_p2y.push_back(scale*p2.y);
+      lines_color.push_back(0x1BE042);
+    }
+    locCorrectionP0.clear();
+    locCorrectionP1.clear();
   }
   
   if(drawParticles){
