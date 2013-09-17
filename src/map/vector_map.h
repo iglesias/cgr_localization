@@ -70,7 +70,7 @@ public:
   vector<LineSegment> sortLineSegments(const vector2f &loc, const vector<line2f> &lines) const;
   
   /// Get line which intersects first the given ray first
-  int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector< int >& visibilityList);
+  int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector< int >& visibilityList) const;
 
   /// Get lines (for each ray) which intersect first the rays starting at angles a0 to a1, at increments of da
   vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const std::vector< vector2f > pointCloud, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0);

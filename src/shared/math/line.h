@@ -73,7 +73,7 @@ public:
   /// Return true if the line l1 intersects this line. If touch==true then touching counts as intersection
   bool intersects(Line2d<num> l1, bool extendL0, bool extendL1, bool touch);
   /// Return true if the line joining p2 and p3 intersects this line. If touch==true then touching counts as intersection
-  bool intersects(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1, bool touch);
+  bool intersects(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1, bool touch) const;
   /// Return true if the ray v from origin intersects this line
   bool intersects(GVector::vector2d<num> v, bool extendL0, bool extendL1){return intersects(Line2d<num>(v), extendL0, extendL1);}
   /// Returns true if the ray from p in the direction rayDir intersects the line
@@ -85,7 +85,7 @@ public:
   /// Return the point of intersection of two lines
   GVector::vector2d<num> intersection(Line2d<num> l1, bool extendL0, bool extendL1);
   /// Return the point of intersection of this line with the line joining p2 and p3
-  GVector::vector2d<num> intersection(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1);
+  GVector::vector2d<num> intersection(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1) const;
   /// Rotates the line about point p by given angle 
   Line2d<num> rotate(GVector::vector2d<num> p, num angle);
   /// Projects point p into the coordinate frame attached to the line segment, where the x axis is in the direction of p0 to p1 of the line
@@ -306,7 +306,7 @@ bool LINE_FUN::liesAlongside(GVector::vector2d<num> p, num margin)
 }
 
 LINE_TEM
-bool LINE_FUN::intersects(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1, bool touch)
+bool LINE_FUN::intersects(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1, bool touch) const
 {
   #ifdef LazyCaching
   if(updateRequired) calcValues();
@@ -395,7 +395,7 @@ bool LINE_FUN::intersects(GVector::vector2d<num> p, num rayDir)
 }
 
 LINE_TEM
-GVector::vector2d<num> LINE_FUN::intersection(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1)
+GVector::vector2d<num> LINE_FUN::intersection(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1) const
 {
   #ifdef LazyCaching
   if(updateRequired) calcValues();

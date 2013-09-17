@@ -217,7 +217,7 @@ vector<float> VectorMap::getRayCast(vector2f loc, float angle, float da, int num
   return rayCast;
 }
 
-int VectorMap::getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector< int >& visibilityList)
+int VectorMap::getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector<int>& visibilityList) const
 {
   vector2f loc1, loc2, dir;
   dir.heading(angle);
