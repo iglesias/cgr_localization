@@ -49,8 +49,6 @@ public:
   
   vector<line2f> lines;
   
-  double vectorScale, vectorOriginX, vectorOriginY, vectorRotation;
-  bool vectorFlipY;
   string mapName;
   string mapsFolder;
   
@@ -61,7 +59,6 @@ public:
   /// size of the visibilityList array
   unsigned int visListWidth, visListHeight;
   bool preRenderExists;
-  double profileTimes[100];
 private:
   vector<vector<vector<int> > > visibilityList;
   
@@ -74,24 +71,31 @@ public:
   
   /// Get line which intersects first the given ray first
   int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector< int >& visibilityList);
+
   /// Get lines (for each ray) which intersect first the rays starting at angles a0 to a1, at increments of da
   vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const std::vector< vector2f > pointCloud, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0);
   /// Convenience function: same as previous, but specified by center angle, angle increment (da), and numRays to scan
   vector<int> getRayToLineCorrespondences(vector2f loc, float a0, float a1, float da, float minRange, float maxRange);
   /// Return intersecting map lines for each ray generated from the provided point cloud (which is assumed to be in local frame)
   vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0);
+
   /// Get ray cast from vector map at given location and angle, as specified by center angle, angle increment (da), and numRays to scan
   vector<float> getRayCast(vector2f loc, float angle, float da, int numRays, float minRange, float maxRange);
+
   ///Checks if any part of line2 is occluded by line1 when seen from loc, and if so, line2 is trimmed accordingly, adding sub-lines to sceneLines if necessary
   void trimOcclusion(vector2f &loc, line2f &line1, line2f &line2, vector<line2f> &sceneLines);
   void trimOcclusion2(vector2f& loc_g, line2f& line1, line2f& line2, vector<line2f>& sceneLines);
+
   /// Get a set of lines which are visible from loc
   vector<int> getSceneLines(vector2f loc, float maxRange);
+
   /// Load map by name
   bool loadMap(const char* name, bool usePreRender);
+
   /// Get Visibility list for specified location
   vector<int>* getVisibilityList(float x, float y);
   vector<int>* getVisibilityList(vector2f loc){ return getVisibilityList(loc.x, loc.y); }
+
   /// Perform an analytical scene render. i.e. Generate a list of lines visible from loc, and the start and end angles subtended by them
   vector<line2f> sceneRender(vector2f loc, float a0=0.0, float a1=M_2PI);
 };
