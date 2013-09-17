@@ -179,7 +179,6 @@ protected:
   vector<Vector2f> gradients2;
   vector<Vector2f> points2;
   vector<line2f> debugLines;
-  vector<int> lineCorrespondences;
   vector<vector2f> locCorrectionP0, locCorrectionP1;
   
   //Statistics of performance
