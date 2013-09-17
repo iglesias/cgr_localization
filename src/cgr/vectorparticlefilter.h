@@ -164,7 +164,6 @@ protected:
   vector<Particle2D> particles;
   vector<Particle2D> particlesRefined;
   int numParticles;
-  vector<float> samplingDensity;
   vector2f lastDistanceMoved;
   float lastAngleTurned;
   
@@ -176,7 +175,6 @@ protected:
   vector<Vector2f> points;
   vector<Vector2f> gradients2;
   vector<Vector2f> points2;
-  vector<line2f> debugLines;
   vector<vector2f> locCorrectionP0, locCorrectionP1;
   
   //Statistics of performance
@@ -222,7 +220,7 @@ public:
   /// Attractor function used for refining location hypotheses 
   inline Vector2f attractorFunction(line2f l, Vector2f p, float attractorRange, float margin = 0);
   /// Observation function for a single ray
-  inline Vector2f observationFunction(line2f l, Vector2f p);
+  inline Vector2f observationFunction(line2f l, Vector2f p) const;
   /// Gradient based on pointCloud observation
   void getPointCloudGradient(vector2f loc, float angle, vector2f& locGrad, float& angleGrad, const std::vector< vector2f >& pointCloud, const std::vector< vector2f >& pointNormals, float& logWeight, const VectorLocalization2D::PointCloudParams& pointCloudParams, const std::vector< int >& lineCorrespondences, const std::vector< line2f >& lines);
   /// Gradient based on LIDAR observation

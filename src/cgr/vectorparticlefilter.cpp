@@ -22,7 +22,7 @@
 #include "vectorparticlefilter.h"
 
 static const bool UseAnalyticRender = true;
-
+vector<line2f> debugLines;
 
 inline float eigenCross(const Vector2f &v1, const Vector2f &v2)
 {
@@ -343,6 +343,7 @@ void VectorLocalization2D::updateLidar(const LidarParams &lidarParams, const Mot
   float sqDensityKernelSize = sq(lidarParams.kernelSize);
   float totalDensity = 0.0;
   int N = int(particlesRefined.size());
+  static vector<float> samplingDensity;
   if(samplingDensity.size()!=N)
     samplingDensity.resize(N);
   if(debug) printf("\nParticle samplingDensity:\n");
@@ -388,6 +389,7 @@ void VectorLocalization2D::updatePointCloud(const vector< vector2f >& pointCloud
   float sqDensityKernelSize = sq(pointCloudParams.kernelSize);
   float totalDensity = 0.0;
   int N = int(particlesRefined.size());
+  static vector<float> samplingDensity;
   if(samplingDensity.size()!=N)
     samplingDensity.resize(N);
   if(debug) printf("\nParticle samplingDensity:\n");
@@ -474,7 +476,7 @@ inline Vector2f VectorLocalization2D::attractorFunction(line2f l, Vector2f p, fl
   return attraction;
 }
 
-inline Vector2f VectorLocalization2D::observationFunction(line2f l, Vector2f p)
+inline Vector2f VectorLocalization2D::observationFunction(line2f l, Vector2f p) const
 {
   static const bool debug = false;
   Vector2f attraction(0.0,0.0), dir(V2COMP(l.Dir())), p0(V2COMP(l.P0())), p1(V2COMP(l.P1()));
