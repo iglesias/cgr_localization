@@ -67,7 +67,7 @@ public:
   VectorMap(const char *name, const char* _mapsFolder, bool usePreRender);
   ~VectorMap();
   
-  vector<LineSegment> sortLineSegments(vector2f &loc, vector<line2f> &lines);
+  vector<LineSegment> sortLineSegments(const vector2f &loc, const vector<line2f> &lines) const;
   
   /// Get line which intersects first the given ray first
   int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector< int >& visibilityList);

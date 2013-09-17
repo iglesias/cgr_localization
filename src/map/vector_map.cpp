@@ -296,7 +296,7 @@ vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float a0, float
   return correspondences;
 }
 
-vector< VectorMap::LineSegment > VectorMap::sortLineSegments(vector2f& loc, vector< line2f >& lines)
+vector< VectorMap::LineSegment > VectorMap::sortLineSegments(const vector2f& loc, const vector< line2f >& lines) const
 {
   static const float eps = RAD(0.001);
   vector< VectorMap::LineSegment > segments;
