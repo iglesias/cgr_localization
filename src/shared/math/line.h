@@ -61,7 +61,7 @@ public:
   
   //Common Math Functions related to lines
   /// Calculate closest distance of p from this line. 
-  num closestDistFromLine(GVector::vector2d<num> p, bool endcaps);
+  num closestDistFromLine(GVector::vector2d<num> p, bool endcaps) const;
   /// Calculate distance of p along the direction rayDir from this line.
   num distFromLine(GVector::vector2d< num > p, GVector::vector2d< num > rayDir, bool extendLine);
   /// Calculate distance of p along the direction angle rayDir from this line.
@@ -207,7 +207,7 @@ void LINE_FUN::calcValues() const
 }
 
 LINE_TEM
-num LINE_FUN::closestDistFromLine(GVector::vector2d<num> p, bool endcaps)
+num LINE_FUN::closestDistFromLine(GVector::vector2d<num> p, bool endcaps) const
 {
 #ifdef LazyCaching
   if(updateRequired) calcValues();
