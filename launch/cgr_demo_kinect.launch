@@ -6,6 +6,6 @@
 
   <node pkg="cgr_localization" type="localization_gui" name="localization_gui" output="screen" required="true" />
   
-  <node pkg="cgr_localization" type="cgr_localization" name="cgr_localization" output="screen" args="-l -p -d0" />
+  <node pkg="cgr_localization" type="cgr_localization" name="cgr_localization" output="screen" args="-l -p -d 1 -n 50" />
   
 </launch>
