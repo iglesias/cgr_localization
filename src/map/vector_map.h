@@ -70,7 +70,7 @@ public:
   vector<LineSegment> sortLineSegments(const vector2f &loc, const vector<line2f> &lines) const;
   
   /// Get line which intersects first the given ray first
-  int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector< int >& visibilityList) const;
+  int getLineCorrespondence(vector2f loc, float angle, float minRange, float maxRange, const std::vector<int>& visibilityList) const;
 
   /// Get lines (for each ray) which intersect first the rays starting at angles a0 to a1, at increments of da
   vector<int> getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const std::vector< vector2f > pointCloud, float minRange, float maxRange, bool analytical = false, vector< line2f >* lines = 0);
@@ -93,8 +93,8 @@ public:
   bool loadMap(const char* name, bool usePreRender);
 
   /// Get Visibility list for specified location
-  vector<int>* getVisibilityList(float x, float y);
-  vector<int>* getVisibilityList(vector2f loc){ return getVisibilityList(loc.x, loc.y); }
+  const vector<int>* getVisibilityList(float x, float y) const;
+  const vector<int>* getVisibilityList(vector2f loc) const { return getVisibilityList(loc.x, loc.y); }
 
   /// Perform an analytical scene render. i.e. Generate a list of lines visible from loc, and the start and end angles subtended by them
   vector<line2f> sceneRender(vector2f loc, float a0=0.0, float a1=M_2PI);

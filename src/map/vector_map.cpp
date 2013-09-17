@@ -147,7 +147,7 @@ VectorMap::~VectorMap()
 {
 }
 
-std::vector< int >* VectorMap::getVisibilityList(float x, float y)
+const std::vector< int >* VectorMap::getVisibilityList(float x, float y) const
 {
   int xInd = bound((x-minX)/visListResolution,0.0,visListWidth-1.0);
   int yInd = bound((y-minY)/visListResolution,0.0,visListHeight-1.0);
@@ -162,7 +162,7 @@ vector<float> VectorMap::getRayCast(vector2f loc, float angle, float da, int num
   float a1 = angle + 0.5*intervals*da;
   vector<float> rayCast;
   rayCast.clear();
-  vector< int >* visibilityList;
+  const vector< int >* visibilityList;
   
   for(float a=a0; a<a1; a += da){
     float ray = maxRange;
@@ -678,7 +678,7 @@ vector<line2f> VectorMap::sceneRender(vector2f loc, float a0, float a1)
   
   vector<line2f> scene, sceneCleaned;
   vector<line2f> linesList;
-  vector<int>* locVisibilityList;
+  const vector<int>* locVisibilityList;
   
   scene.clear();
   sceneCleaned.clear();
@@ -687,8 +687,10 @@ vector<line2f> VectorMap::sceneRender(vector2f loc, float a0, float a1)
   if(preRenderExists){
     locVisibilityList = getVisibilityList(loc);
   }else{
-    locVisibilityList = new vector<int>;
-    *locVisibilityList = getSceneLines(loc,MaxRange);
+    // ugly patch so that locVisibilityList can be const
+    vector<int>* locVisibilityListAlloc = new vector<int>;
+    *locVisibilityListAlloc = getSceneLines(loc,MaxRange);
+    locVisibilityList = locVisibilityListAlloc;
   }
   for(unsigned int i=0; i<locVisibilityList->size(); i++){
     linesList.push_back(lines[locVisibilityList->at(i)]);
