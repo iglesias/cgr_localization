@@ -240,7 +240,7 @@ int VectorMap::getLineCorrespondence(vector2f loc, float angle, float minRange, 
   return bestLine;
 }
 
-vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const vector<vector2f> pointCloud, float minRange, float maxRange, bool analytical, vector<line2f> *lines )
+vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, float a0, float a1, const vector<vector2f> pointCloud, float minRange, float maxRange, bool analytical, vector<line2f> *lines)
 {
   //FunctionTimer ft(__FUNCTION__);
   static const bool UsePreRender = true;
@@ -251,6 +251,7 @@ vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, fl
   if(UsePreRender && preRenderExists)
     locVisibilityList = *getVisibilityList(loc);
   else
+    //FIXME this look like a bug, locVisibilityList = getSceneLines(loc, maxRange)
     getSceneLines(loc,maxRange);
   
   if(analytical && lines!=NULL){
