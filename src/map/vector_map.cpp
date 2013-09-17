@@ -390,7 +390,7 @@ vector<int> VectorMap::getRayToLineCorrespondences(vector2f loc, float angle, fl
     return getRayToLineCorrespondences(loc,a0,a1,da,minRange,maxRange);
 }
 
-std::vector<int> VectorMap::getSceneLines(vector2f loc, float maxRange)
+std::vector<int> VectorMap::getSceneLines(vector2f loc, float maxRange) const
 {
   static const float eps = 1e-6;
   vector<int> linesList, sceneLines;

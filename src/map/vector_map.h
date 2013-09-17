@@ -87,7 +87,7 @@ public:
   void trimOcclusion2(vector2f& loc_g, line2f& line1, line2f& line2, vector<line2f>& sceneLines);
 
   /// Get a set of lines which are visible from loc
-  vector<int> getSceneLines(vector2f loc, float maxRange);
+  vector<int> getSceneLines(vector2f loc, float maxRange) const;
 
   /// Load map by name
   bool loadMap(const char* name, bool usePreRender);
