@@ -221,8 +221,6 @@ public:
   /// Refine a single location hypothesis based on a Point Cloud observation
   void refineLocationPointCloud(vector2f& loc, float& angle, float& initialWeight, float& finalWeight, const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const VectorLocalization2D::PointCloudParams& pointCloudParams);
   
-  void computeParticleWeights(vector2f deltaLoc, float deltaAngle, vector2f minLocStdDev, float minAngleStdDev, const VectorLocalization2D::MotionModelParams& motionParams);
-  
   /// Attractor function used for refining location hypotheses 
   inline Vector2f attractorFunction(line2f l, Vector2f p, float attractorRange, float margin = 0);
   /// Observation function for a single ray
