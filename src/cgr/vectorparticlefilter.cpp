@@ -186,7 +186,7 @@ float VectorLocalization2D::motionModelWeight(vector2f loc, float angle, const M
   return w;
 }
 
-float VectorLocalization2D::observationWeightPointCloud(vector2f loc, float angle, vector< vector2f >& pointCloud, vector< vector2f >& pointNormals, const PointCloudParams & pointCloudParams)
+float VectorLocalization2D::observationWeightPointCloud(vector2f loc, float angle, const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const PointCloudParams & pointCloudParams)
 {
   //static const bool UseAnalyticRender = false;
   static const bool debug = false;
@@ -377,7 +377,7 @@ void VectorLocalization2D::updateLidar(const LidarParams &lidarParams, const Mot
   updateTime = GetTimeSec() - tStart;
 }
 
-void VectorLocalization2D::updatePointCloud(vector< vector2f >& pointCloud, vector< vector2f >& pointNormals, const MotionModelParams &motionParams, const PointCloudParams &pointCloudParams)
+void VectorLocalization2D::updatePointCloud(const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const MotionModelParams &motionParams, const PointCloudParams &pointCloudParams)
 {
   static const bool debug = false;
   static const bool usePermissibility = true;

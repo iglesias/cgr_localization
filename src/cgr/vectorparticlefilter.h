@@ -208,7 +208,7 @@ public:
   /// Update distribution based on LIDAR observations
   void updateLidar(const VectorLocalization2D::LidarParams& lidarParams, const VectorLocalization2D::MotionModelParams& motionParams);
   /// Update distribution based on Point Cloud observations
-  void updatePointCloud(vector< vector2f >& pointCloud, vector< vector2f >& pointNormals, const VectorLocalization2D::MotionModelParams& motionParams, const VectorLocalization2D::PointCloudParams& pointCloudParams);
+  void updatePointCloud(const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const VectorLocalization2D::MotionModelParams& motionParams, const VectorLocalization2D::PointCloudParams& pointCloudParams);
   /// Resample distribution
   void resample(Resample type = LowVarianceResampling);
   
@@ -230,7 +230,7 @@ public:
   /// Observation likelihood based on LIDAR observation
   float observationWeightLidar(vector2f loc, float angle, const VectorLocalization2D::LidarParams& lidarParams, const std::vector< Vector2f >& laserPoints);
   /// Observation likelihood based on point cloud observation
-  float observationWeightPointCloud(vector2f loc, float angle, vector< vector2f >& pointCloud, vector< vector2f >& pointNormals, const PointCloudParams& pointCloudParams);
+  float observationWeightPointCloud(vector2f loc, float angle, const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const PointCloudParams& pointCloudParams);
   /// Probability of specified pose corresponding to motion model
   float motionModelWeight(vector2f loc, float angle, const VectorLocalization2D::MotionModelParams& motionParams);
   /// Set pose with specified uncertainty
