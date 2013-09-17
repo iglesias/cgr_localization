@@ -172,8 +172,6 @@ protected:
   vector<VectorMap> maps;
   
   //These are class-wide only so that they can be accessed for debugging purposes
-  vector<float> stage0Weights;
-  vector<float> stageRWeights;
   vector<Vector2f> gradients;
   vector<Vector2f> points;
   vector<Vector2f> gradients2;

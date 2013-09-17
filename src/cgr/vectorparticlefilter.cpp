@@ -53,8 +53,6 @@ VectorLocalization2D::VectorLocalization2D(int _numParticles)
   loadAtlas();
   numParticles = _numParticles;
   particles.resize(_numParticles);
-  stage0Weights.resize(_numParticles);
-  stageRWeights.resize(_numParticles);
 }
 
 void VectorLocalization2D::loadAtlas()
@@ -137,8 +135,6 @@ void VectorLocalization2D::initialize(int _numParticles, const char* mapName, ve
   
   numParticles = _numParticles;
   particles.resize(numParticles);
-  stage0Weights.resize(numParticles);
-  stageRWeights.resize(numParticles);
   if(debug) printf(" Initializing particles: 0.0%%\r");
   fflush(stdout);
   for(int i=0; i<numParticles; i++){
@@ -814,9 +810,10 @@ void VectorLocalization2D::refineLidar(const LidarParams &lidarParams)
   particlesRefined = particles;
   if(lidarParams.numSteps>0){
     for(int i=0; i<numParticles; i++){
-      refineLocationLidar(particlesRefined[i].loc, particlesRefined[i].angle, stage0Weights[i], stageRWeights[i], lidarParams, laserPoints);
-      laserEval.stage0Weights += stage0Weights[i];
-      laserEval.stageRWeights += stageRWeights[i];
+      float initialWeight, finalWeight;
+      refineLocationLidar(particlesRefined[i].loc, particlesRefined[i].angle, initialWeight, finalWeight, lidarParams, laserPoints);
+      laserEval.stage0Weights += initialWeight;
+      laserEval.stageRWeights += finalWeight;
     }
   }
   refineTime = GetTimeSec() - tStart;
@@ -881,9 +878,10 @@ void VectorLocalization2D::refinePointCloud(const vector<vector2f> &pointCloud, 
   particlesRefined = particles;
   if(pointCloudParams.numSteps>0){
     for(int i=0; i<numParticles; i++){
-      refineLocationPointCloud(particlesRefined[i].loc, particlesRefined[i].angle, stage0Weights[i], stageRWeights[i], pointCloud, pointNormals, pointCloudParams);
-      pointCloudEval.stage0Weights += stage0Weights[i];
-      pointCloudEval.stageRWeights += stageRWeights[i];
+      float initialWeight, finalWeight;
+      refineLocationPointCloud(particlesRefined[i].loc, particlesRefined[i].angle, initialWeight, finalWeight, pointCloud, pointNormals, pointCloudParams);
+      pointCloudEval.stage0Weights += initialWeight;
+      pointCloudEval.stageRWeights += finalWeight;
     }
   }
 
