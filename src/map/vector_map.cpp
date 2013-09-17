@@ -572,7 +572,7 @@ void VectorMap::trimOcclusion2(vector2f& loc_g, line2f& line1, line2f& line2, ve
   }
 }
 
-void VectorMap::trimOcclusion(vector2f& loc, line2f& line1, line2f& line2, vector< line2f >& sceneLines)
+void VectorMap::trimOcclusion(const vector2f& loc, const line2f& line1, line2f& line2, vector< line2f >& sceneLines) const
 {
   // Checks if any part of line2 is occluded by line1 when seen from loc, and if so, line2 is trimmed accordingly, adding sub-lines to sceneLines if necessary
   static const float eps = 1e-4;

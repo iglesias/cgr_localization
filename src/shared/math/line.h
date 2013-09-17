@@ -71,7 +71,7 @@ public:
   /// Returns true if p lies along side this line
   bool liesAlongside(GVector::vector2d<num> p, num margin = 0.0);
   /// Return true if the line l1 intersects this line. If touch==true then touching counts as intersection
-  bool intersects(Line2d<num> l1, bool extendL0, bool extendL1, bool touch);
+  bool intersects(Line2d<num> l1, bool extendL0, bool extendL1, bool touch) const;
   /// Return true if the line joining p2 and p3 intersects this line. If touch==true then touching counts as intersection
   bool intersects(GVector::vector2d< num > p2, GVector::vector2d< num > p3, bool extendL0, bool extendL1, bool touch) const;
   /// Return true if the ray v from origin intersects this line
@@ -346,7 +346,7 @@ GVector::vector2d<num> LINE_FUN::intersectTest(GVector::vector2d< num > p2, GVec
 }
 
 LINE_TEM
-bool LINE_FUN::intersects(Line2d<num> l2, bool extendL0, bool extendL1, bool touch)
+bool LINE_FUN::intersects(Line2d<num> l2, bool extendL0, bool extendL1, bool touch) const
 {
   #ifdef LazyCaching
   if(updateRequired) calcValues();
