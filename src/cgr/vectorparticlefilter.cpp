@@ -186,7 +186,7 @@ float VectorLocalization2D::motionModelWeight(vector2f loc, float angle, const M
   return w;
 }
 
-float VectorLocalization2D::observationWeightPointCloud(vector2f loc, float angle, const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const PointCloudParams & pointCloudParams)
+float VectorLocalization2D::observationWeightPointCloud(vector2f loc, float angle, const vector< vector2f >& pointCloud, const vector< vector2f >& pointNormals, const PointCloudParams & pointCloudParams) const
 {
   //static const bool UseAnalyticRender = false;
   static const bool debug = false;
@@ -255,7 +255,7 @@ float VectorLocalization2D::observationWeightPointCloud(vector2f loc, float angl
   return exp(logTotalWeight);
 }
 
-float VectorLocalization2D::observationWeightLidar(vector2f loc, float angle, const LidarParams &lidarParams, const vector<Vector2f> &laserPoints)
+float VectorLocalization2D::observationWeightLidar(vector2f loc, float angle, const LidarParams &lidarParams, const vector<Vector2f> &laserPoints) const
 {
   static const bool debug = false;
   float numRays = lidarParams.numRays;
