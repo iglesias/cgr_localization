@@ -152,6 +152,7 @@ public:
     NaiveResampling,
     LowVarianceResampling,
     SensorResettingResampling,
+    SparseMultinomialResampling,
   };
   
 protected:
@@ -241,6 +242,8 @@ public:
   void lowVarianceResample();
   /// Resample particles using naive resampling
   void naiveResample();
+  /// Resample particles using sparse multinomial resampling
+  void sparseMultinomialResampling();
   /// Compute the maximum likelihood location based on particle spread
   void computeLocation(vector2f &loc, float &angle);
   /// Returns the current map name

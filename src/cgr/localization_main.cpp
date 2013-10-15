@@ -648,7 +648,7 @@ void depthCallback(const sensor_msgs::Image &msg)
     double start = GetTimeSec();
     localization->refinePointCloud(pointCloud2D, pointCloudNormals2D, pointCloudParams);
     localization->updatePointCloud(pointCloud2D, pointCloudNormals2D, motionParams, pointCloudParams);
-    localization->resample(VectorLocalization2D::LowVarianceResampling);
+    localization->resample(VectorLocalization2D::SparseMultinomialResampling);
     localization->computeLocation(curLoc,curAngle);
     std::cerr << "point cloud update: " << GetTimeSec()-start << std::endl;
   }
