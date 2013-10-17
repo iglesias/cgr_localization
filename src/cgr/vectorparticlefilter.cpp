@@ -24,6 +24,8 @@
 static const bool UseAnalyticRender = true;
 vector<line2f> debugLines;
 
+static const bool UseSimpleUpdate = true;
+
 inline float eigenCross(const Vector2f &v1, const Vector2f &v2)
 {
   return v1.dot(Vector2f(v2.y(),-v2.x()));
@@ -338,43 +340,62 @@ void VectorLocalization2D::updateLidar(const LidarParams &lidarParams, const Mot
   for(int i=0; i<lidarParams.numRays; i++){
     laserPoints[i] = lidarParams.laserToBaseTrans + lidarParams.laserToBaseRot*lidarParams.scanHeadings[i]*lidarParams.laserScan[i];
   }
-  
-  //Compute the sampling density
-  float sqDensityKernelSize = sq(lidarParams.kernelSize);
-  float totalDensity = 0.0;
-  int N = int(particlesRefined.size());
-  static vector<float> samplingDensity;
-  if(samplingDensity.size()!=N)
-    samplingDensity.resize(N);
-  if(debug) printf("\nParticle samplingDensity:\n");
-  for(int i=0; i<N; i++){
-    float w = 0.99;
-    for(int j=0; j<N; j++){
-      if(i==j)
-        continue;
-      if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize && fabs(angle_diff(particlesRefined[j].angle, particlesRefined[i].angle))<RAD(20.0))
-      //if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize)
-        w++;
+
+  if(UseSimpleUpdate){
+
+    int N = int(particlesRefined.size());
+    float totalWeight = 0.0;
+    //Compute importance weights
+    if(debug) printf("\nParticle weights:\n");
+    for(int i=0; i<N; i++){
+      Particle2D &p = particlesRefined[i];
+      p.weight = observationWeightLidar(p.loc, p.angle, lidarParams, laserPoints);
+      totalWeight = p.weight;
+      if(debug) printf("%2d: %f\n", i, p.weight);
     }
-    samplingDensity[i] = w;
-    totalDensity += w;
-    if(debug) printf("%2d:%f\n",i,w);
-  }
-  // Normalize densities, not really necessary since resampling does not require normalized weights
-  for(int i=0; i<N; i++){
-    samplingDensity[i] /= totalDensity;
-  }
+    //Normalize importance weights
+    for (int i=0; i<N; i++) particlesRefined[i].weight /= totalWeight;
   
-  //Compute importance weights = observation x motion / samplingDensity
-  if(debug) printf("\nParticle weights:\n");
-  for(int i=0; i<N; i++){
-    Particle2D &p = particlesRefined[i];
-    float w1 = observationWeightLidar(p.loc, p.angle, lidarParams, laserPoints);
-    float w2 = motionModelWeight(p.loc, p.angle, motionParams);
-    p.weight = w1*w2/samplingDensity[i];
-    if(debug) printf("%2d: %f , %f , %f\n",i,w1,w2,p.weight);
-  }
+  }else{
   
+    //Compute the sampling density
+    float sqDensityKernelSize = sq(lidarParams.kernelSize);
+    float totalDensity = 0.0;
+    int N = int(particlesRefined.size());
+    static vector<float> samplingDensity;
+    if(samplingDensity.size()!=N)
+      samplingDensity.resize(N);
+    if(debug) printf("\nParticle samplingDensity:\n");
+    for(int i=0; i<N; i++){
+      float w = 0.99;
+      for(int j=0; j<N; j++){
+        if(i==j)
+          continue;
+        if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize && fabs(angle_diff(particlesRefined[j].angle, particlesRefined[i].angle))<RAD(20.0))
+        //if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize)
+          w++;
+      }
+      samplingDensity[i] = w;
+      totalDensity += w;
+      if(debug) printf("%2d:%f\n",i,w);
+    }
+    // Normalize densities, not really necessary since resampling does not require normalized weights
+    for(int i=0; i<N; i++){
+      samplingDensity[i] /= totalDensity;
+    }
+    
+    //Compute importance weights = observation x motion / samplingDensity
+    if(debug) printf("\nParticle weights:\n");
+    for(int i=0; i<N; i++){
+      Particle2D &p = particlesRefined[i];
+      float w1 = observationWeightLidar(p.loc, p.angle, lidarParams, laserPoints);
+      float w2 = motionModelWeight(p.loc, p.angle, motionParams);
+      p.weight = w1*w2/samplingDensity[i];
+      if(debug) printf("%2d: %f , %f , %f\n",i,w1,w2,p.weight);
+    }
+
+  }
+
   updateTime = GetTimeSec() - tStart;
 }
 
@@ -382,45 +403,65 @@ void VectorLocalization2D::updatePointCloud(const vector< vector2f >& pointCloud
 {
   static const bool debug = false;
   static const bool usePermissibility = true;
-  
+
   double tStart = GetTimeSec();
 
-  //Compute the sampling density
-  float sqDensityKernelSize = sq(pointCloudParams.kernelSize);
-  float totalDensity = 0.0;
-  int N = int(particlesRefined.size());
-  static vector<float> samplingDensity;
-  if(samplingDensity.size()!=N)
-    samplingDensity.resize(N);
-  if(debug) printf("\nParticle samplingDensity:\n");
-  for(int i=0; i<N; i++){
-    float w = 0.99;
-    for(int j=0; j<N; j++){
-      if(i==j)
-        continue;
-      if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize && fabs(angle_diff(particlesRefined[j].angle, particlesRefined[i].angle))<RAD(20.0))
-        //if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize)
-        w++;
+  if(UseSimpleUpdate){
+
+    //Compute importance weights using the observation model
+    float totalDensity = 0.0;
+    int N = int(particlesRefined.size());
+    float totalWeight = 0.0;
+    if(debug) printf("\nParticle weights:\n");
+    for(int i=0; i<N; i++){
+      Particle2D &p = particlesRefined[i];
+      p.weight = observationWeightPointCloud(p.loc, p.angle, pointCloud, pointNormals, pointCloudParams);
+      totalWeight += p.weight;
+      if(debug) printf("%2d: %f\n", i, p.weight);
     }
-    samplingDensity[i] = w;
-    totalDensity += w;
-    if(debug) printf("%2d:%f\n",i,w);
+    //Normalize the importance weights
+    for (int i=0; i<N; i++) particlesRefined[i].weight /= totalWeight;
+
+  }else{
+
+    //Compute the sampling density
+    float sqDensityKernelSize = sq(pointCloudParams.kernelSize);
+    float totalDensity = 0.0;
+    int N = int(particlesRefined.size());
+    static vector<float> samplingDensity;
+    if(samplingDensity.size()!=N)
+      samplingDensity.resize(N);
+    if(debug) printf("\nParticle samplingDensity:\n");
+    for(int i=0; i<N; i++){
+      float w = 0.99;
+      for(int j=0; j<N; j++){
+        if(i==j)
+          continue;
+        if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize && fabs(angle_diff(particlesRefined[j].angle, particlesRefined[i].angle))<RAD(20.0))
+          //if( (particlesRefined[j].loc - particlesRefined[i].loc).sqlength() < sqDensityKernelSize)
+          w++;
+      }
+      samplingDensity[i] = w;
+      totalDensity += w;
+      if(debug) printf("%2d:%f\n",i,w);
+    }
+    // Normalize densities, not really necessary since resampling does not require normalized weights
+    for(int i=0; i<N; i++){
+      samplingDensity[i] /= totalDensity;
+    }
+
+    //Compute importance weights = observation x motion / samplingDensity
+    if(debug) printf("\nParticle weights:\n");
+    for(int i=0; i<N; i++){
+      Particle2D &p = particlesRefined[i];
+      float w1 = observationWeightPointCloud(p.loc, p.angle, pointCloud, pointNormals, pointCloudParams);
+      float w2 = motionModelWeight(p.loc, p.angle, motionParams);
+      p.weight = w1*w2/samplingDensity[i];
+      if(debug) printf("%2d: %f , %f , %f\n",i,w1,w2,p.weight);
+    }
+
   }
-  // Normalize densities, not really necessary since resampling does not require normalized weights
-  for(int i=0; i<N; i++){
-    samplingDensity[i] /= totalDensity;
-  }
-  
-  //Compute importance weights = observation x motion / samplingDensity
-  if(debug) printf("\nParticle weights:\n");
-  for(int i=0; i<N; i++){
-    Particle2D &p = particlesRefined[i];
-    float w1 = observationWeightPointCloud(p.loc, p.angle, pointCloud, pointNormals, pointCloudParams);
-    float w2 = motionModelWeight(p.loc, p.angle, motionParams);
-    p.weight = w1*w2/samplingDensity[i];
-    if(debug) printf("%2d: %f , %f , %f\n",i,w1,w2,p.weight);
-  }
-  
+
   updateTime = GetTimeSec() - tStart;
 }
 
