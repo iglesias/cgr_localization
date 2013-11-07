@@ -44,7 +44,7 @@ def depthCallback(data):
   DEPTH.append(data.timeStamp,data.x,data.y,data.angle)
   rospy.sleep(0.1)
 
-def localization_listener(dump_fname='pose'):
+def localization_listener(dump_dirname='posefiles', dump_fname='pose'):
 
   # anonymous=True flag means that rospy chooses a unique
   # name for the 'localization_listener' node so that multiple
@@ -70,10 +70,10 @@ def localization_listener(dump_fname='pose'):
   DEPTH.adjustTimeStamp(refTimeStamp)
 
   # plot pose over time
-#   display_data()
+  display_data()
 
   # serialize and save data into disk
-  dump_data(fname=dump_fname)
+  dump_data(dirname=dump_dirname, fname=dump_fname)
 
 def display_data():
   import matplotlib.pyplot as plt
@@ -94,20 +94,20 @@ def display_data():
 
   plt.show()
 
-def dump_data(fname):
+def dump_data(dirname, fname):
   import pickle
 
   pose = [LIDAR,DEPTH]
-  pickle.dump(pose, open('posefiles/%s.p' % fname,'wb'))
+  pickle.dump(pose, open('%s/%s.p' % (dirname, fname),'wb'))
 
-  print 'data dumped to posefiles/%s.p!' % fname
+  print 'data dumped to %s/%s.p!' % (dirname, fname)
 
 if __name__ == '__main__':
   import sys
 
-  if len(sys.argv)==2:
-    # call from cgr_benchmark looks like: ./localization_listener posefilename
-    localization_listener(sys.argv[1])
+  if len(sys.argv)==3:
+    # call from cgr_benchmark looks like: ./localization_listener posefilesdir posefilename
+    localization_listener(sys.argv[1], sys.argv[2])
   else:
     localization_listener()
 
