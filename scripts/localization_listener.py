@@ -1,29 +1,29 @@
 #!/usr/bin/env python
 
 class Pose:
-	''' TODO DOC '''
+  ''' TODO DOC '''
 
-	def __init__(self):
-		# the position and orientation over time will be stored in these lists
-		self.timeStamp = list()
-		self.x = list()
-		self.y = list()
-		self.angle = list()
+  def __init__(self):
+    # the position and orientation over time will be stored in these lists
+    self.timeStamp = list()
+    self.x = list()
+    self.y = list()
+    self.angle = list()
 
-	def append(self,timeStamp,x,y,angle):
-		self.timeStamp.append(timeStamp)
-		self.x.append(x)
-		self.y.append(y)
-		self.angle.append(angle)
+  def append(self,timeStamp,x,y,angle):
+    self.timeStamp.append(timeStamp)
+    self.x.append(x)
+    self.y.append(y)
+    self.angle.append(angle)
 
-	def pop(self,index=-1):
-		self.timeStamp.pop(index)
-		self.x.pop(index)
-		self.y.pop(index)
-		self.angle.pop(index)
+  def pop(self,index=-1):
+    self.timeStamp.pop(index)
+    self.x.pop(index)
+    self.y.pop(index)
+    self.angle.pop(index)
 
-	def adjustTimeStamp(self,refTimeStamp):
-		self.timeStamp[:] = [timeStamp - refTimeStamp for timeStamp in self.timeStamp]
+  def adjustTimeStamp(self,refTimeStamp):
+    self.timeStamp[:] = [timeStamp - refTimeStamp for timeStamp in self.timeStamp]
 
 PKG = 'cgr_localization' # this package name
 import roslib; roslib.load_manifest(PKG)
@@ -95,12 +95,12 @@ def display_data():
   plt.show()
 
 def dump_data(fname):
-	import pickle
+  import pickle
 
-	pose = [LIDAR,DEPTH]
-	pickle.dump(pose, open('posefiles/%s.p' % fname,'wb'))
+  pose = [LIDAR,DEPTH]
+  pickle.dump(pose, open('posefiles/%s.p' % fname,'wb'))
 
-	print 'data dumped to posefiles/%s.p!' % fname
+  print 'data dumped to posefiles/%s.p!' % fname
 
 if __name__ == '__main__':
   import sys
