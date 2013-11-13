@@ -60,7 +60,7 @@ FIND_LIBRARY( GLEW_LIBRARY
   NAMES GLEW glew
   PATHS
   /usr/lib64
-  /usr/lib 
+  /usr/lib
   /usr/local/lib64
   /usr/local/lib
   /sw/lib
@@ -80,8 +80,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/fspf)
 include_directories(${LUA_INCLUDE_DIR})
 include_directories(${USB_INCLUDE_DIR})
 
-#set (libs roslib popt pthread glut ${OPENGL_LIBRARY} ${GLEW_LIBRARY} ${LUA_LIBRARIES} rt)  
-set (libs popt pthread glut ${OPENGL_LIBRARY} ${GLEW_LIBRARY} ${LUA_LIBRARIES} rt)  
+set (libs popt pthread glut ${OPENGL_LIBRARY} ${GLEW_LIBRARY} ${LUA_LIBRARIES} rt)
 
 set (SHARED_SRCS
   src/shared/math/gvector.h
@@ -136,23 +135,27 @@ target_link_libraries(cgr_libraries shared_libraries map_libraries ${libs})
 
 IF(ROS_ROOT)
   set (target cgr_localization)
-  rosbuild_add_executable(${target} src/cgr/localization_main.cpp )
+  rosbuild_add_executable(${target} src/cgr/localization_main.cpp)
   add_dependencies(${target} cgr_libraries fspf_libraries shared_libraries map_libraries rosbuild_precompile)
   target_link_libraries(${target} shared_libraries map_libraries cgr_libraries fspf_libraries ${libs} roslib)
-  
+
   set (target kinect_main)
-  rosbuild_add_executable(${target} src/kinect/kinect_main.cpp )
+  rosbuild_add_executable(${target} src/kinect/kinect_main.cpp)
   add_dependencies(${target} shared_libraries lib_freenect fspf_libraries rosbuild_precompile)
   target_link_libraries(${target} shared_libraries lib_freenect fspf_libraries ${libs} roslib)
-  
+
   set (target localization_gui)
   rosbuild_add_executable(${target} src/gui/vector_display_main.cpp src/gui/vector_display.cpp ${GUI_MOC_SRCS})
   add_dependencies(${target} shared_libraries rosbuild_precompile map_libraries)
   target_link_libraries(${target} shared_libraries map_libraries ${QT_LIBRARIES} ${libs} roslib)
+
+  set (target fspf)
+  rosbuild_add_executable(${target} src/fspf/fspf_main.cpp)
+  add_dependencies(${target} shared_libraries fspf_libraries rosbuild_precompile)
+  target_link_libraries(${target} shared_libraries fspf_libraries ${libs} roslib)
 ENDIF(ROS_ROOT)
 
 set (target pre_render)
 add_executable(${target} src/cgr/pre_render.cpp )
 add_dependencies(${target} shared_libraries map_libraries)
 target_link_libraries(${target} shared_libraries map_libraries ${libs})
-

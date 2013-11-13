@@ -93,7 +93,7 @@ geometry_msgs::PoseArray particlesMsg;
 
 //Point Cloud parameters
 GVector::matrix3d<float> kinectToRobotTransform;
-//KinectRawDepthCam kinectDepthCam;
+// KinectRawDepthCam kinectDepthCam;
 KinectOpenNIDepthCam kinectDepthCam;
 PlaneFilter::PlaneFilterParams filterParams;
 PlaneFilter planeFilter;

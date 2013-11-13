@@ -52,25 +52,26 @@ def localization_listener(dump_dirname='posefiles', dump_fname='pose'):
   rospy.init_node('localization_listener', anonymous=True)
 
   # subscribe to the localization topic to receive LocalizationMsg
-  rospy.Subscriber('localization_lidar', LocalizationMsg, lidarCallback, queue_size=1)
-  rospy.Subscriber('localization_depth', LocalizationMsg, depthCallback, queue_size=1)
+#   rospy.Subscriber('localization_lidar', LocalizationMsg, lidarCallback, queue_size=1)
+  rospy.Subscriber('localization', LocalizationMsg, depthCallback, queue_size=1)
 
   # prevent python from exiting until the node is stopped
   rospy.spin()
 
   # remove the first elements of the lists because they contain the default
   # localization, set when no data has been yet received
-  LIDAR.pop(0)
-  LIDAR.pop(0)
+#   LIDAR.pop(0)
+#   LIDAR.pop(0)
   DEPTH.pop(0)
   DEPTH.pop(0)
 
-  refTimeStamp = min(LIDAR.timeStamp[0],DEPTH.timeStamp[0])
-  LIDAR.adjustTimeStamp(refTimeStamp)
+#   refTimeStamp = min(LIDAR.timeStamp[0],DEPTH.timeStamp[0])
+#   LIDAR.adjustTimeStamp(refTimeStamp)
+  refTimeStamp = DEPTH.timeStamp[0]
   DEPTH.adjustTimeStamp(refTimeStamp)
 
   # plot pose over time
-  display_data()
+#   display_data()
 
   # serialize and save data into disk
   dump_data(dirname=dump_dirname, fname=dump_fname)
