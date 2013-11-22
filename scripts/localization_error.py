@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 def ComputeError(pose):
-  ''' TODO DOC '''
   import math
   from localization_listener import Pose
 
@@ -34,19 +33,19 @@ def ComputeError(pose):
   return error
 
 def DisplayErrors(errors):
-  ''' TODO DOC '''
   import matplotlib.pyplot as plt
 
   fig, axarr = plt.subplots(3,1)
 
-  axarr[0].set_xticks([])
+  axarr[0].grid(True)
   axarr[0].set_ylabel(r'$e_{x} \ [\mathrm{m}]$', fontsize=18)
   axarr[0].set_label('x')
 
-  axarr[1].set_xticks([])
+  axarr[1].grid(True)
   axarr[1].set_ylabel(r'$e_{y} \ [\mathrm{m}]$', fontsize=18)
   axarr[1].set_label('y')
 
+  axarr[2].grid(True)
   axarr[2].set_xlabel(r'$t \ [\mathrm{s}]$', fontsize=18)
   axarr[2].set_ylabel(r'$e_{\theta} \ [\mathrm{rad}] $', fontsize=18)
   axarr[2].set_label('angle')
@@ -59,7 +58,6 @@ def DisplayErrors(errors):
     axarr[2].plot(errors[i].timeStamp, errors[i].angle)
 
   fig.legend(plist, ('Complete Graph', 'Sparse Graph'), 'upper center', ncol=2, fancybox=True)
-  plt.savefig('test.pdf', format='pdf')
   plt.show()
 
 import pickle
