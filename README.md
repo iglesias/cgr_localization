@@ -40,15 +40,15 @@ Run "make" in the cgr_localization folder OR run "rosmake cgr_localization" afte
 The following demo data sets are available:
 
 CoBot2 in GHC7 (LIDAR)
-Download the ROS bag file from http://data.cobotrobots.com/cgr_localization/cobot2_ghc7_lidar.bag
+Download the ROS bag file from http://cobotrobots.com/data/cgr_localization/cobot2_ghc7_lidar.bag
 Modify the file config/localization_parameters.cfg, line 9 to mapName = "GHC7"; 
 
 CoBot2 in GHC7 (Kinect)
-Download the ROS bag file from http://data.cobotrobots.com/cgr_localization/cobot2_ghc7_kinect.bag
+Download the ROS bag file from http://cobotrobots.com/data/cgr_localization/cobot2_ghc7_kinect.bag
 Modify the file config/localization_parameters.cfg, line 9 to mapName = "GHC7"; 
 
 CoBot2 in NSH4 (LIDAR)
-Download the ROS bag file from http://data.cobotrobots.com/cgr_localization/cobot2_nsh4_lidar.bag
+Download the ROS bag file from http://cobotrobots.com/data/cgr_localization/cobot2_nsh4_lidar.bag
 Modify the file config/localization_parameters.cfg, line 9 to mapName = "NSH4"; 
 
 To run the code with the demo data:
